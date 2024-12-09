@@ -1,5 +1,5 @@
 "use client"
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { GameState, GameEvent, Choice } from '@/types/game';
 
 const initialState: GameState = {
@@ -296,6 +296,94 @@ const randomEvents: GameEvent[] = [
         }
       }
     ]
+  },
+  {
+    id: "kitty_party_crisis",
+    title: "Kitty Party Pe Vaar!",
+    description: "Biwi ki kitty party mein Gupta ji ki wife ne Louis Vuitton bag dikha diya. Ab aapki biwi ki 'simple living' philosophy khatre mein hai...",
+    choices: [
+      {
+        text: "Emotional blackmail: 'Beta ke college fees ka paisa bag mein udaa dein?'",
+        consequences: {
+          skills: { emotionalDrama: 20 },
+          reputation: { kanjoos: 15, society: -10 }
+        }
+      },
+      {
+        text: "Buy fake LV bag from Karol Bagh. 'Asli hai ji, sale mein liya'",
+        consequences: {
+          money: { black: -20000 },
+          skills: { excuseMaking: 15 },
+          reputation: { society: 10 }
+        }
+      },
+      {
+        text: "Start WhatsApp campaign about 'Swadeshi Apnao, Videshi Hatao'",
+        consequences: {
+          skills: { emotionalDrama: 25 },
+          reputation: { society: -5, kanjoos: 20 }
+        }
+      }
+    ]
+  },
+  {
+    id: "dhanda_expansion",
+    title: "Dhande Ka Time Aa Gaya!",
+    description: "Purana dushman Bansal ji ka business band ho gaya hai. Unka prime location shop available hai...",
+    choices: [
+      {
+        text: "'Bhai-chara nibhao': Buy shop at premium but establish market dominance",
+        consequences: {
+          money: { white: -1000000, black: -2000000 },
+          reputation: { business: 30, society: 15 }
+        }
+      },
+      {
+        text: "Spread rumor 'Shop mein vastu dosh hai' and negotiate hard",
+        consequences: {
+          money: { black: -1000000 },
+          skills: { haggling: 25, emotionalDrama: 15 },
+          reputation: { kanjoos: 20 }
+        }
+      },
+      {
+        text: "Tell Bansal ji 'Mere cousin interested hai' and flip property",
+        consequences: {
+          money: { hidden: 500000 },
+          skills: { taxEvasion: 20 },
+          reputation: { business: -10 }
+        }
+      }
+    ]
+  },
+  {
+    id: "beta_startup",
+    title: "Beta Wants to Leave Dhanda!",
+    description: "Aapka beta traditional business chodd ke startup karna chahta hai. 'Papa, AI is the future!' bol raha hai...",
+    choices: [
+      {
+        text: "Give emotional speech about '3 generations ka dhanda' while crying",
+        consequences: {
+          skills: { emotionalDrama: 30 },
+          reputation: { society: 10 }
+        }
+      },
+      {
+        text: "Secretly invest in competitor's AI startup as backup plan",
+        consequences: {
+          money: { hidden: -500000 },
+          skills: { taxEvasion: 15 },
+          reputation: { business: 20 }
+        }
+      },
+      {
+        text: "Tell relatives 'Beta MBA kar raha hai' to avoid shame",
+        consequences: {
+          skills: { excuseMaking: 25 },
+          reputation: { society: -10 }
+        }
+      }
+    ]
   }
   // Add more events here
 ];
@@ -309,6 +397,27 @@ export default function Game() {
   const [playerName, setPlayerName] = useState<string>("");
   const [gameStarted, setGameStarted] = useState(false);
   const [currentEvent, setCurrentEvent] = useState<GameEvent | null>(null);
+  const [showTip, setShowTip] = useState<string>("");
+  
+  // Random tips array
+  const baniyaTips = [
+    "Tip: 'Bhaiya thoda aur kam kar do' works 60% of the time, every time",
+    "Tip: Calculator is not just a device, it's an emotion",
+    "Tip: 'Abhi market mein mandi hai' - Universal excuse since 1947",
+    "Tip: Sharma ji ka beta is not your friend",
+    "Tip: 'Pichle saal se loss chal raha hai' - Best line for tax season",
+    "Tip: 'Beta business mein utaar-chadhaav toh hota rehta hai' - Every Baniya Dad Ever"
+  ];
+
+  // Show random tip every 10 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const randomTip = baniyaTips[Math.floor(Math.random() * baniyaTips.length)];
+      setShowTip(randomTip);
+      setTimeout(() => setShowTip(""), 5000);
+    }, 10000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleStartGame = () => {
     setGameState(prev => ({
@@ -352,78 +461,127 @@ export default function Game() {
 
   if (!gameStarted) {
     return (
-      <div className="flex flex-col items-center gap-4 p-8">
-        <h1 className="text-3xl font-bold">🏠 Baniya Life Simulator</h1>
-        <p className="text-xl italic">Where Every Paisa Counts™</p>
-        <input
-          type="text"
-          placeholder="Enter your name, future Crorepati..."
-          value={playerName}
-          onChange={(e) => setPlayerName(e.target.value)}
-          className="p-2 border rounded"
-        />
-        <button
-          onClick={handleStartGame}
-          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-        >
-          Start Business Empire
-        </button>
+      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white">
+        <div className="flex flex-col items-center gap-6 p-8">
+          <h1 className="text-5xl font-bold text-yellow-500 mb-4">🏠 Baniya Life Simulator</h1>
+          <p className="text-2xl italic text-yellow-300">Paisa Hi Paisa Hoga™</p>
+          <p className="text-md text-gray-400 italic">A direct attack on Mayank Agarwal & Aditya Varshney by Utkarsh, in collaboration with Akshat</p>
+          <div className="max-w-md w-full bg-gray-800 p-8 rounded-lg shadow-xl">
+            <input
+              type="text"
+              placeholder="Enter your name, future Crorepati..."
+              value={playerName}
+              onChange={(e) => setPlayerName(e.target.value)}
+              className="w-full p-3 border rounded bg-gray-700 text-white placeholder-gray-400 mb-4"
+            />
+            <button
+              onClick={handleStartGame}
+              className="w-full py-3 bg-yellow-500 text-black rounded-lg font-bold hover:bg-yellow-400 transition-colors"
+            >
+              Start Your Dhandha 📈
+            </button>
+            <div className="mt-4 text-sm text-gray-400 text-center">
+              * Terms & Conditions: CA ko mat batana
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="p-4 max-w-4xl mx-auto">
-      <div className="stats grid grid-cols-3 gap-4 mb-4 bg-gray-800 p-4 rounded-lg">
-        <div className="stat">
-          <h3>White Money: ₹{gameState.player.money.white}</h3>
-          <h3>Black Money: ₹{gameState.player.money.black}</h3>
-          <h3 className="text-xs">(Shh... Hidden: ₹{gameState.player.money.hidden})</h3>
-        </div>
-        <div className="stat">
-          <h3>Kanjoos Level: {gameState.player.reputation.kanjoos}</h3>
-          <h3>Society Status: {gameState.player.reputation.society}</h3>
-        </div>
-        <div className="stat">
-          <h3>Day: {gameState.currentDay}</h3>
-          <h3>Last IT Raid: {gameState.lastITRaidDay === 0 ? 'Never' : `Day ${gameState.lastITRaidDay}`}</h3>
-        </div>
-      </div>
-      
-      {currentEvent && (
-        <div className="event-container bg-gray-800 p-6 rounded-lg mt-8">
-          <h2 className="text-2xl font-bold mb-2">{currentEvent.title}</h2>
-          <p className="text-gray-300 mb-6">{currentEvent.description}</p>
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white p-4">
+      <div className="max-w-4xl mx-auto">
+        {showTip && (
+          <div className="fixed top-4 right-4 bg-yellow-500 text-black p-3 rounded-lg shadow-xl animate-bounce">
+            {showTip}
+          </div>
+        )}
+        
+        <div className="stats grid grid-cols-3 gap-4 mb-8">
+          <div className="stat bg-gray-800 p-6 rounded-lg shadow-xl">
+            <h3 className="text-xl mb-2 text-yellow-500">💰 Money Matters</h3>
+            <div className="space-y-2">
+              <p>White Money: ₹{gameState.player.money.white.toLocaleString()}</p>
+              <p>Black Money: ₹{gameState.player.money.black.toLocaleString()}</p>
+              <p className="text-xs text-gray-400">(Shh... Hidden: ₹{gameState.player.money.hidden.toLocaleString()})</p>
+            </div>
+          </div>
           
-          <div className="choices-grid grid gap-4">
-            {currentEvent.choices.map((choice, index) => (
-              <button
-                key={index}
-                onClick={() => handleChoice(choice)}
-                className="choice-button p-4 bg-gray-700 hover:bg-gray-600 rounded-lg text-left transition-colors"
-              >
-                {choice.text}
-                <div className="consequences text-sm text-gray-400 mt-2">
-                  {choice.consequences.money && (
-                    <div>
-                      {Object.entries(choice.consequences.money).map(([key, value]) => (
-                        <span key={key}>₹{value > 0 ? '+' : ''}{value} {key} </span>
-                      ))}
-                    </div>
-                  )}
-                  {choice.consequences.reputation && (
-                    <div>
-                      {Object.entries(choice.consequences.reputation).map(([key, value]) => (
-                        <span key={key}>{value > 0 ? '+' : ''}{value} {key} </span>
-                      ))}
-                    </div>
-                  )}
+          <div className="stat bg-gray-800 p-6 rounded-lg shadow-xl">
+            <h3 className="text-xl mb-2 text-yellow-500">🏆 Reputation</h3>
+            <div className="space-y-2">
+              <div>
+                <p>Kanjoos Level: {gameState.player.reputation.kanjoos}</p>
+                <div className="w-full bg-gray-700 rounded-full h-2">
+                  <div 
+                    className="bg-yellow-500 h-2 rounded-full transition-all duration-500"
+                    style={{ width: `${gameState.player.reputation.kanjoos}%` }}
+                  ></div>
                 </div>
-              </button>
-            ))}
+              </div>
+              <div>
+                <p>Society Status: {gameState.player.reputation.society}</p>
+                <div className="w-full bg-gray-700 rounded-full h-2">
+                  <div 
+                    className="bg-green-500 h-2 rounded-full transition-all duration-500"
+                    style={{ width: `${gameState.player.reputation.society}%` }}
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="stat bg-gray-800 p-6 rounded-lg shadow-xl">
+            <h3 className="text-xl mb-2 text-yellow-500">📅 Timeline</h3>
+            <div className="space-y-2">
+              <p>Day: {gameState.currentDay}</p>
+              <p>Last IT Raid: {gameState.lastITRaidDay === 0 ? 'Bhagwan ka shukr hai' : `Day ${gameState.lastITRaidDay}`}</p>
+            </div>
           </div>
         </div>
-      )}
+        
+        {currentEvent && (
+          <div className="event-container bg-gray-800 p-8 rounded-lg shadow-xl mb-8 transform hover:scale-[1.01] transition-transform">
+            <h2 className="text-3xl font-bold mb-4 text-yellow-500">{currentEvent.title}</h2>
+            <p className="text-xl text-gray-300 mb-8">{currentEvent.description}</p>
+            
+            <div className="choices-grid grid gap-6">
+              {currentEvent.choices.map((choice, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleChoice(choice)}
+                  className="choice-button p-6 bg-gray-700 hover:bg-gray-600 rounded-lg text-left transition-all hover:transform hover:translate-x-2"
+                >
+                  <div className="text-lg mb-3">{choice.text}</div>
+                  <div className="consequences text-sm text-gray-400 grid grid-cols-2 gap-2">
+                    {choice.consequences.money && (
+                      <div className="consequence-money">
+                        <span className="text-yellow-500">💰 Money Impact:</span>
+                        {Object.entries(choice.consequences.money).map(([key, value]) => (
+                          <div key={key} className={value > 0 ? 'text-green-400' : 'text-red-400'}>
+                            {key}: ₹{value > 0 ? '+' : ''}{value.toLocaleString()}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    {choice.consequences.reputation && (
+                      <div className="consequence-reputation">
+                        <span className="text-yellow-500">🏆 Reputation Impact:</span>
+                        {Object.entries(choice.consequences.reputation).map(([key, value]) => (
+                          <div key={key} className={value > 0 ? 'text-green-400' : 'text-red-400'}>
+                            {key}: {value > 0 ? '+' : ''}{value}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
